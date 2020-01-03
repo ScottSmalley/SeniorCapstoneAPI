@@ -1,0 +1,9 @@
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\bin\Debug\netcoreapp2.1\FlexPoolAPI.deps.json
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\bin\Debug\netcoreapp2.1\FlexPoolAPI.runtimeconfig.json
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\bin\Debug\netcoreapp2.1\FlexPoolAPI.runtimeconfig.dev.json
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\bin\Debug\netcoreapp2.1\FlexPoolAPI.dll
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\bin\Debug\netcoreapp2.1\FlexPoolAPI.pdb
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.AssemblyInfoInputs.cache
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.AssemblyInfo.cs
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.dll
+C:\Users\4\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.pdb
