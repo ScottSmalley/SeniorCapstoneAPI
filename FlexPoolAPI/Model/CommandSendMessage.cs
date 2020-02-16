@@ -1,5 +1,6 @@
 ﻿/*
  * Creates a message and inserts it into the database.
+ * 
  * -Scott Smalley
  */
 using System;

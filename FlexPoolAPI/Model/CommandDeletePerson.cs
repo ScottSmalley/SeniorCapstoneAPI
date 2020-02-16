@@ -1,5 +1,6 @@
 ﻿/*
  * Deletes a specified person in the database.
+ * 
  * -Scott Smalley
  */
 using System;

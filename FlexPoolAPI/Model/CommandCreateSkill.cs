@@ -1,6 +1,7 @@
 ﻿/*
  * Creates a new skill to be used
  * to assign to person objects.
+ * 
  * -Scott Smalley
  */
 using System;

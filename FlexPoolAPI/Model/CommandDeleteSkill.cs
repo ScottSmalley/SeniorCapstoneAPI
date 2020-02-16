@@ -1,5 +1,6 @@
 ﻿/*
  * Deletes a skill from the database.
+ * 
  * -Scott Smalley
  */
 using System;

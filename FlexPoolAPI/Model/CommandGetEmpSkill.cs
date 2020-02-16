@@ -1,8 +1,12 @@
-﻿using System;
+﻿/*
+ * Returns all the skills associated
+ * with a specific employee.
+ * 
+ * -Scott Smalley
+ */
+using System;
 using System.Collections.Generic;
-using System.Text;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {

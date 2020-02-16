@@ -1,6 +1,7 @@
 ﻿/*
  * Verifies the emp_id and password
  * given match what's in the database.
+ * 
  * -Scott Smalley
  */
 using System;

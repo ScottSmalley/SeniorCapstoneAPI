@@ -1,11 +1,8 @@
 ﻿/*
- * Used to determine which type of command to use.
+ * Determines which type of command object to use.
+ * 
  * -Scott Smalley
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace FlexPoolAPI.Model
 {
     /// <summary>
@@ -25,6 +22,12 @@ namespace FlexPoolAPI.Model
                     return new CommandDeletePerson(newAction);
                 case "edit_person":
                     return new CommandEditPerson(newAction);
+                case "edit_person_lockout":
+                    return new CommandEditPersonLockout(newAction);
+                case "freeze_person":
+                    return new CommandFreezePerson(newAction);
+                case "unfreeze_person":
+                    return new CommandUnfreezePerson(newAction);
                 case "authenticate":
                     return new CommandAuthenticate(newAction);
                 case "assign_skill":
@@ -47,6 +50,42 @@ namespace FlexPoolAPI.Model
                     return new CommandGetReceivedMessage(newAction);
                 case "delete_message":
                     return new CommandDeleteMessage(newAction);
+                case "create_shift":
+                    return new CommandCreateShift(newAction);
+                case "delete_shift":
+                    return new CommandDeleteShift(newAction);
+                case "get_all_shift":
+                    return new CommandGetAllShift(newAction);
+                case "assign_shift":
+                    return new CommandAssignShift(newAction);
+                case "remove_shift":
+                    return new CommandRemoveShift(newAction);
+                case "edit_dept_mgr":
+                    return new CommandEditDeptMgr(newAction);
+                case "get_shift_by_dept":
+                    return new CommandGetShiftByDept(newAction);
+                case "get_shift_by_emp":
+                    return new CommandGetShiftByEmp(newAction);
+                case "get_shift_by_skill":
+                    return new CommandGetShiftBySkill(newAction);
+                case "send_cancel_request":
+                    return new CommandSendCancelRequest(newAction);
+                case "delete_cancel_request":
+                    return new CommandDeleteCancelRequest(newAction);
+                case "get_cancel_request":
+                    return new CommandGetCancelRequest(newAction);
+                case "approve_cancel_request":
+                    return new CommandApproveCancelRequest(newAction);
+                case "unapprove_cancel_request":
+                    return new CommandUnapproveCancelRequest(newAction);
+                case "get_person_and_shift":
+                    return new CommandGetPersonAndShift(newAction);
+                case "create_survey":
+                    return new CommandCreateSurvey(newAction);
+                case "delete_survey":
+                    return new CommandDeleteSurvey(newAction);
+                case "get_all_survey":
+                    return new CommandGetAllSurvey(newAction);
             }
             return new CommandError(newAction);
         }

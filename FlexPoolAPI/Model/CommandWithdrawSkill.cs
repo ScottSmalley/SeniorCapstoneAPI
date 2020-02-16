@@ -1,6 +1,7 @@
 ﻿/*
  * Removes a record in our database that
  * represents an assigned skill to a person object.
+ * 
  * -Scott Smalley
  */
 using System;

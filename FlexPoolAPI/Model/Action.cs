@@ -1,6 +1,13 @@
-﻿using System;
+﻿/*
+ * Represents the request given by
+ * the user. This stores helpful information
+ * such as the request Dictionary, Time conversion,
+ * our MySQL connection, and getter for the "action" item.
+ * 
+ * -Scott Smalley
+ */
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FlexPoolAPI.Model
 {
@@ -25,10 +32,29 @@ namespace FlexPoolAPI.Model
                 return "Not Found.";
             }
         }
+        public void SetActionItem(string newData)
+        {
+            try
+            {
+                requestBody["action"][0] = newData;
+            }
+            catch (KeyNotFoundException)
+            {
+                requestBody["action"][0] = "failure";
+                requestBody.Add("reason", new string[] { "Action Key not found." });
+            }
+        }
+
+        public void AddRequestItem(string key, string[] data)
+        {
+            requestBody.Add(key, data);
+        }
+
         public Dictionary<string, string[]> GetRequestBody()
         {
             return requestBody;
         }
+
         public string GetSQLConn()
         {
             return sqlConn;

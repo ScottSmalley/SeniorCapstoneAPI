@@ -2,6 +2,7 @@
  * Generates a record in our assigned skill
  * database table. Represents a predefined skill
  * a person has.
+ * 
  * -Scott Smalley
  */
 using System;

@@ -1,5 +1,6 @@
 ﻿/*
  * Edits a skill in our database.
+ * 
  * -Scott Smalley
  */
 using System;

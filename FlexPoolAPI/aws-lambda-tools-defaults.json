@@ -13,6 +13,7 @@
   "configuration": "Release",
   "framework": "netcoreapp2.1",
   "function-runtime": "dotnetcore2.1",
+  "function-name":  "flexpooldb",
   "function-memory-size": 256,
   "function-timeout": 30,
   "function-handler": "FlexPoolAPI::FlexPoolAPI.FlexPoolAPI::Handler"

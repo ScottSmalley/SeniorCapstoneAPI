@@ -1,6 +1,7 @@
 ﻿/*
  * Returns all the messages that are received by 
  * a specific user.
+ * 
  * -Scott Smalley
  */
 using System;

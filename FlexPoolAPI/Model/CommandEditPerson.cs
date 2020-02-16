@@ -1,6 +1,7 @@
 ﻿/*
- * Edits a Person in our database.
+ * Edits a Person in our database,
  * their employee id cannot be changed.
+ * 
  * -Scott Smalley
  */
 using System;

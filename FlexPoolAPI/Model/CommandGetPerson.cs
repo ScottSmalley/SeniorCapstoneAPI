@@ -1,6 +1,7 @@
 ﻿/*
  * Generates a Dictionary of Person objects that 
  * are pulled from the DB. 
+ * 
  * -Scott Smalley
  */
 using System;

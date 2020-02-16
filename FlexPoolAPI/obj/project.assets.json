@@ -5261,11 +5261,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\scott\\Desktop\\SeniorCapstoneAPI\\FlexPoolAPI\\FlexPoolAPI.csproj",
+      "projectUniqueName": "C:\\Users\\scott\\Desktop\\FlexPoolAPI\\flexpool\\FlexPoolAPI\\FlexPoolAPI.csproj",
       "projectName": "FlexPoolAPI",
-      "projectPath": "C:\\Users\\scott\\Desktop\\SeniorCapstoneAPI\\FlexPoolAPI\\FlexPoolAPI.csproj",
+      "projectPath": "C:\\Users\\scott\\Desktop\\FlexPoolAPI\\flexpool\\FlexPoolAPI\\FlexPoolAPI.csproj",
       "packagesPath": "C:\\Users\\scott\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\scott\\Desktop\\SeniorCapstoneAPI\\FlexPoolAPI\\obj\\",
+      "outputPath": "C:\\Users\\scott\\Desktop\\FlexPoolAPI\\flexpool\\FlexPoolAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"

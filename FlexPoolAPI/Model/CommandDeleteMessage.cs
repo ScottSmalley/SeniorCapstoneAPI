@@ -1,5 +1,6 @@
 ﻿/*
  * Deletes a message from the database.
+ * 
  * -Scott Smalley
  */
 using System;

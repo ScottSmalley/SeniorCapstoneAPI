@@ -1,6 +1,7 @@
 ﻿/*
  * Inserts a Person into our database
  * person table.
+ * 
  * -Scott Smalley
  */
 using System;
@@ -21,12 +22,39 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    string sql = "INSERT INTO flexpooldb.person (emp_id, name, email, password, phone_num, weekly_cap, emp_type)" +
-                                " VALUES(" + requestBody["emp_id"][0] + ", \"" +
-                                requestBody["name"][0] + "\", \"" + requestBody["email"][0] + "\", \"" +
-                                requestBody["password"][0] + "\", \"" + requestBody["phone_num"][0] + "\", " +
-                                requestBody["weekly_cap"][0] + ", (SELECT emp_type_id FROM flexpooldb.employee_type " +
-                                "WHERE emp_type_name = \"" + requestBody["emp_type_name"][0] + "\"));";
+                    
+                    string insertStatement = "INSERT INTO flexpooldb.person (emp_id, password";
+                    string valueStatement = " VALUES(" + requestBody["emp_id"][0] + ", \"" + requestBody["password"][0] + "\"";
+                    if (requestBody.ContainsKey("name"))
+                    {
+                        insertStatement += ", name";
+                        valueStatement += ", \"" + requestBody["name"][0] + "\"";
+                    }
+                    if (requestBody.ContainsKey("email"))
+                    {
+                        insertStatement += ", email";
+                        valueStatement += ", \"" + requestBody["email"][0] + "\"";
+                    }
+                    if (requestBody.ContainsKey("phone_num"))
+                    {
+                        insertStatement += ", phone_num";
+                        valueStatement += ", \"" + requestBody["phone_num"][0] + "\"";
+                    }
+                    if (requestBody.ContainsKey("weekly_cap"))
+                    {
+                        insertStatement += ", weekly_cap";
+                        valueStatement += ", " + requestBody["weekly_cap"][0];
+                    }
+                    if (requestBody.ContainsKey("emp_type_name"))
+                    {
+                        insertStatement += ", emp_type";
+                        valueStatement += ", (SELECT emp_type_id FROM flexpooldb.employee_type " +
+                                "WHERE emp_type_name = \"" + requestBody["emp_type_name"][0] + "\")";
+                    }
+                    insertStatement += ")";
+                    valueStatement += ");";
+
+                    string sql = insertStatement + valueStatement;
 
                     Console.WriteLine(sql);
                     //Make a Command Object to then execute.
@@ -55,3 +83,10 @@ namespace FlexPoolAPI.Model
         }
     }
 }
+//Original
+//string sql = "INSERT INTO flexpooldb.person (emp_id, name, email, password, phone_num, weekly_cap, emp_type)" +
+//            " VALUES(" + requestBody["emp_id"][0] + ", \"" +
+//            requestBody["name"][0] + "\", \"" + requestBody["email"][0] + "\", \"" +
+//            requestBody["password"][0] + "\", \"" + requestBody["phone_num"][0] + "\", " +
+//            requestBody["weekly_cap"][0] + ", (SELECT emp_type_id FROM flexpooldb.employee_type " +
+//            "WHERE emp_type_name = \"" + requestBody["emp_type_name"][0] + "\"));";

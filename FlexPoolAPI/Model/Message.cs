@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿/*
+ * Represents a Message between two employees.
+ * 
+ * -Scott Smalley
+ */
 namespace FlexPoolAPI.Model
 {
     class Message

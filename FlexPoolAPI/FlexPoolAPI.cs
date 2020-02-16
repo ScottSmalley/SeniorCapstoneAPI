@@ -1,25 +1,22 @@
 ﻿/*
  * Utah Valley University
- * CS4400 Capstone Project
+ * CS4550 Capstone Project
  * FlexPool Project
  * Brandon Bezzant
  * Mike Daniel
- * Joseph Dominguez-Virla
  * Scott Smalley
  * 
  * Summary:
  * This API uses the Command design pattern
  * to focus on each command or "action" item sent
- * by the user. It uses loose coupling and 
- * high cohesion to create a modular framework
- * to make it easy to create/modify commands without
- * modifying the main code execution.
- * We take in a request that contains a body with JSON data.
- * We deserialize it, convert it to a Dictionary, and
- * determine which type of command to execute based on that
- * data. We execute the appropriate command and package it
- * up to be sent back in a JSON format.
- * Developed by Scott Smalley
+ * by the user. We take in a request that contains 
+ * a body with JSON data. We deserialize it, convert 
+ * it to a Dictionary, and determine which type of 
+ * command to execute based on that data. We execute 
+ * the appropriate command and package it up to be 
+ * sent back in a JSON format.
+ * 
+ * - Designed and developed by Scott Smalley. 
  */
 using System;
 using Newtonsoft.Json;
@@ -38,50 +35,54 @@ namespace FlexPoolAPI
 {
     public class FlexPoolAPI
     {
-        private string mySQLConnectionString;
+        private static readonly JsonSerializer _jsonSerializer = new JsonSerializer();
+        //private string mySQLConnectionString;
 
-        //All our execution happens in here. We need to build out inside this Handler method. 
-        //It's what gets called by AWS Lambda.
-        public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest)
+        /// <summary>
+        /// Takes in the APIGatewayProxyRequest, determines
+        /// what command is requested, executes the command,
+        /// and returns the serialized data in an 
+        /// APIGatewayProxyResponse.
+        /// </summary>
+        /// <param name="apiGatewayRequest"></param>
+        /// <returns></returns>
+         public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest)
+        //public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest, ILambdaContext lambdaContextnotepad)
         {
             Console.WriteLine(apiGatewayRequest.Path + "\n" + apiGatewayRequest.HttpMethod + "\n" + apiGatewayRequest.Body);
 
-            //Acts as our return from Lambda to the user. Later on we 
-            //use the response.Body property to Serialize a JSON object to act as the
-            //data going back to the user.
+            //Response Object to the HTTP request with default values.
             APIGatewayProxyResponse response = new APIGatewayProxyResponse()
             {
                 StatusCode = (int)(HttpStatusCode.NoContent),
                 Body = string.Empty
             };
 
+            //New-up Action objects and executes.
             try
             {
-                Console.WriteLine("apiGatewayRequest:  " + apiGatewayRequest);
-                mySQLConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONN");
+                //DB Connection
+                //string mySQLConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONN");
 
-                //The data that we need to use is in the request Body.
+                //HTTP request data
                 Dictionary<string, string[]> requestBody = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(apiGatewayRequest.Body);
 
-                //Create an Action object which stores the Dictionary 
-                //created from the request body and the DB connection string.
+                //Create an Action object which stores the HTTP request data.
                 Model.Action newAction = new Model.Action(requestBody, mySQLConnectionString);
 
-                //Determine which Command object to use for execution.
+                //Object that determines which Command to execute.
                 ActionParser parse = new ActionParser();
 
-                //Creates the appropriate subclass of ActionCommand to
-                //execute next.
+                //Determine which command to execute, and create the appropriate Command object.
                 ActionCommand action = parse.DetermineCommandType(newAction);
 
-                //Executor Object.
+                //Object that executes the Command object.
                 ActionExecutor executor = new ActionExecutor();
 
-                //Takes the result of executing the ActionCommand into a Dictionary
-                //to be sent back to the user.
+                //Executes the Command, and gets the response data.
                 Dictionary<string, string[]> responseData = executor.ExecuteCommand(action);
 
-                //Serializes the result to be sent back.
+                //Serializes the data for packaging.
                 response.Body = JsonConvert.SerializeObject(responseData);
 
                 response.StatusCode = (int)(HttpStatusCode.OK);

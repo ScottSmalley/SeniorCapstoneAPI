@@ -4,10 +4,9 @@
  * composes an Action object which
  * stores request data and a database
  * connection.
+ * -Scott Smalley
  */
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FlexPoolAPI.Model
 {
