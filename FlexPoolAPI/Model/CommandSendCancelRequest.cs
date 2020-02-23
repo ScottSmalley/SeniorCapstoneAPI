@@ -1,6 +1,5 @@
 ﻿/*
  * Creates a shift cancel request record.
- * 
  * -Scott Smalley
  */
 using System;
@@ -43,11 +42,11 @@ namespace FlexPoolAPI.Model
 
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem executing the action.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "unspecified problem generating message." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

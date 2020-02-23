@@ -1,6 +1,5 @@
 ﻿/*
  * Deletes a specified person in the database.
- * 
  * -Scott Smalley
  */
 using System;
@@ -22,14 +21,23 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    //Will revisit later to check other tables to clean them of data of this persons. 
-                    string sql = "DELETE FROM flexpooldb.person WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                    //Creates a storage record for the person to be deleted.
+                    string sql = "INSERT INTO flexpooldb.person_storage (emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen) " + 
+                                 "SELECT emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen FROM flexpooldb.person " +
+                                 "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                    Console.WriteLine(sql);
+                    using (MySqlCommand cmdMigratePerson = new MySqlCommand(sql, conn))
+                    {
+                        cmdMigratePerson.ExecuteNonQuery();
+                    }
 
+                    //Deletes person from the person table.
+                    sql = "DELETE FROM flexpooldb.person WHERE emp_id = " + requestBody["emp_id"][0] + ";";
                     Console.WriteLine(sql);
                     //Make a Command Object to then execute.
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlCommand cmdDeletePerson = new MySqlCommand(sql, conn))
                     {
-                        cmd.ExecuteNonQuery();
+                        cmdDeletePerson.ExecuteNonQuery();
                         responseData.Add("response", new string[] { "success" });
                         return responseData;
                     }
@@ -40,6 +48,13 @@ namespace FlexPoolAPI.Model
                 Console.WriteLine("ERROR: missing key in the dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
+                return responseData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

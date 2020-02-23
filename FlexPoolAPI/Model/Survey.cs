@@ -1,9 +1,11 @@
 ﻿/*
  * Represents a shift survey that
  * employees and managers fill out after every shift.
- * 
  * -Scott Smalley
  */
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace FlexPoolAPI.Model
 {

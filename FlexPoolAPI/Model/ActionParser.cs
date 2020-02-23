@@ -1,6 +1,5 @@
 ﻿/*
- * Determines which type of command object to use.
- * 
+ * Used to determine which type of command to use.
  * -Scott Smalley
  */
 namespace FlexPoolAPI.Model
@@ -40,16 +39,20 @@ namespace FlexPoolAPI.Model
                     return new CommandDeleteSkill(newAction);
                 case "edit_skill":
                     return new CommandEditSkill(newAction);
+                case "get_all_skill":
+                    return new CommandGetAllSkill(newAction);
                 case "get_emp_skill":
                     return new CommandGetEmpSkill(newAction);
                 case "send_message":
                     return new CommandSendMessage(newAction);
+                case "delete_message":
+                    return new CommandDeleteMessage(newAction);
                 case "get_sent_message":
                     return new CommandGetSentMessage(newAction);
                 case "get_received_message":
                     return new CommandGetReceivedMessage(newAction);
-                case "delete_message":
-                    return new CommandDeleteMessage(newAction);
+                case "get_all_message":
+                    return new CommandGetAllMessage(newAction);
                 case "create_shift":
                     return new CommandCreateShift(newAction);
                 case "delete_shift":
@@ -80,6 +83,8 @@ namespace FlexPoolAPI.Model
                     return new CommandUnapproveCancelRequest(newAction);
                 case "get_person_and_shift":
                     return new CommandGetPersonAndShift(newAction);
+                case "get_all_dept":
+                    return new CommandGetAllDept(newAction);
                 case "create_survey":
                     return new CommandCreateSurvey(newAction);
                 case "delete_survey":

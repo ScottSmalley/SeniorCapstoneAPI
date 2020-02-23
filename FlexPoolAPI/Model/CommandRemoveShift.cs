@@ -2,7 +2,6 @@
  * Deletes an assignment record in the
  * database for a specific employee and
  * a shift they signed up for previously.
- * 
  * -Scott Smalley
  */
 using System;
@@ -23,49 +22,64 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    
-                    //Delete the record assigning the shift to the employee.
-                    string sql = "DELETE FROM flexpooldb.assigned_shift " +
-                                 "WHERE shift_id = " + requestBody["shift_id"][0] + " " +
-                                 "AND emp_id = " + requestBody["emp_id"][0] + ";";
-
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    if (inDebugMode)
                     {
-                        cmd.ExecuteNonQuery();
-                        
-                        //Check the database to make sure the deletion was successful.
-                        sql = "SELECT COUNT(*) FROM flexpooldb.assigned_shift " +
-                            "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
-
+                        //Delete the record assigning the shift to the employee.
+                        string sql = "DELETE FROM flexpooldb.assigned_shift " +
+                                     "WHERE shift_id = " + requestBody["shift_id"][0] + " " +
+                                     "AND emp_id = " + requestBody["emp_id"][0] + ";";
                         Console.WriteLine(sql);
                         //Make a Command Object to then execute.
-                        using (MySqlCommand cmdCount = new MySqlCommand(sql, conn))
+                        using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
-                            object result = cmdCount.ExecuteScalar();
-                            int wasDeleted = Convert.ToInt32(result);
-                            //If the record still exists, send a failure back.
-                            if (wasDeleted > 0)
-                            {
-                                Console.WriteLine("ERROR: internal server error");
-                                responseData.Add("response", new string[] { "failure" });
-                                responseData.Add("reason", new string[] { "internal database error." });
-                                return responseData;
-                            }
-                            //If the record is gone, decrement the number of employees assigned to the shift.
-                            sql = "UPDATE flexpooldb.shift " +
-                                  "SET num_worker = num_worker - 1 " +
-                                  "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
+                            cmd.ExecuteNonQuery();
+                            responseData.Add("response", new string[] { "success" });
+                            return responseData;
+                        }
+                    }
+                    else
+                    {
+                        //Decrement the number of employees assigned to the shift.
+                        string sql = "UPDATE flexpooldb.shift " +
+                                     "SET num_worker = num_worker - 1 " +
+                                     "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
+                        Console.WriteLine(sql);
+                        //Make a Command Object to then execute.
+                        using (MySqlCommand cmdIncrement = new MySqlCommand(sql, conn))
+                        {
+                            cmdIncrement.ExecuteNonQuery();
+                        }
 
-                            Console.WriteLine(sql);
-                            //Make a Command Object to then execute.
-                            using (MySqlCommand cmdIncrement = new MySqlCommand(sql, conn))
-                            {
-                                cmdIncrement.ExecuteNonQuery();
-                                responseData.Add("response", new string[] { "success" });
-                                return responseData;
-                            }
+                        //Remove the hours associated with the shift assignment we're removing.
+                        sql = "UPDATE flexpooldb.person " +
+                              "SET weekly_hours = weekly_hours - " +
+                              "((SELECT duration FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") / 60) " +
+                              "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                        using (MySqlCommand cmdAdjustWorkHours = new MySqlCommand(sql, conn))
+                        {
+                            cmdAdjustWorkHours.ExecuteNonQuery();
+                        }
+
+                        //Migrate the assigned_shift records over to the storage table.
+                        sql = "INSERT INTO flexpooldb.assigned_shift_storage (shift_id, emp_id, was_completed) " +
+                              "SELECT shift_id, emp_id, 0 FROM flexpooldb.assigned_shift " +
+                              "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
+                        using (MySqlCommand cmdMigrateShifts = new MySqlCommand(sql, conn))
+                        {
+                            cmdMigrateShifts.ExecuteNonQuery();
+                        }
+
+                        //Delete the record assigning the shift to the employee.
+                        sql = "DELETE FROM flexpooldb.assigned_shift " +
+                              "WHERE shift_id = " + requestBody["shift_id"][0] + " " +
+                              "AND emp_id = " + requestBody["emp_id"][0] + ";";
+                        Console.WriteLine(sql);
+                        //Make a Command Object to then execute.
+                        using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                            responseData.Add("response", new string[] { "success" });
+                            return responseData;
                         }
                     }
                 }
@@ -84,11 +98,11 @@ namespace FlexPoolAPI.Model
                 responseData.Add("reason", new string[] { "internal database error." });
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem executing the action.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "unspecified problem assigning skill." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

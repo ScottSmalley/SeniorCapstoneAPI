@@ -4,7 +4,6 @@
  * if a user forgets the required "action" 
  * item in their request body, it'll send back
  * an error.
- * 
  * -Scott Smalley
  */
 using System;

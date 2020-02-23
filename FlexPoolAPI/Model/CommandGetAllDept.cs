@@ -1,27 +1,26 @@
 ﻿/*
- * Returns all the existing surveys 
- * in the database.
+ * Returns all the departments in the database.
  * -Scott Smalley
  */
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
-    class CommandGetAllSurvey : ActionCommand
+    class CommandGetAllDept : ActionCommand
     {
-        public CommandGetAllSurvey(Action newAction) : base(newAction) { }
+        public CommandGetAllDept(Action newAction) : base(newAction) { }
         public override Dictionary<string, string[]> Execute()
         {
             Dictionary<string, string[]> responseData = new Dictionary<string, string[]>();
             try
             {
+                List<string> result = new List<string>();
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM flexpooldb.shift_survey;";
+                    string sql = "SELECT dept_name FROM flexpooldb.dept_type;";
 
                     Console.WriteLine(sql);
                     //Make a Command Object to then execute.
@@ -32,27 +31,13 @@ namespace FlexPoolAPI.Model
                         {
                             while (rdr.Read())
                             {
-                                Survey newShift = new Survey()
-                                {
-                                    shift_id = (int)rdr[0],
-                                    emp_id = (int)rdr[1],
-                                    mgr_id = (int)rdr[2],
-                                    rating = (int)rdr[3],
-                                    text = (string)rdr[4]
-                                };
-                                responseData.Add($"shift_id {newShift.shift_id} emp_id {newShift.emp_id}", new string[] { JsonConvert.SerializeObject(newShift) });
+                                result.Add((string)rdr[0]);
                             }
+                            responseData.Add("Dept", result.ToArray());
                             return responseData;
                         }
                     }
                 }
-            }
-            catch (KeyNotFoundException)
-            {
-                Console.WriteLine("ERROR: get_all_shift missing item in dictionary.");
-                responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "missing item in dictionary." });
-                return responseData;
             }
             catch (Exception e)
             {

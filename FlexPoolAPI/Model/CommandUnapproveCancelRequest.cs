@@ -1,7 +1,6 @@
 ﻿/*
  * Flags a CancelRequest as reviewed
  * and declined.
- * 
  * -Scott Smalley
  */
 using System;
@@ -41,6 +40,13 @@ namespace FlexPoolAPI.Model
                 Console.WriteLine("ERROR: missing key in the dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
+                return responseData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

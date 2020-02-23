@@ -1,7 +1,6 @@
 ﻿/*
  * Inserts a Person into our database
  * person table.
- * 
  * -Scott Smalley
  */
 using System;
@@ -80,13 +79,13 @@ namespace FlexPoolAPI.Model
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
+                return responseData;
+            }
         }
     }
 }
-//Original
-//string sql = "INSERT INTO flexpooldb.person (emp_id, name, email, password, phone_num, weekly_cap, emp_type)" +
-//            " VALUES(" + requestBody["emp_id"][0] + ", \"" +
-//            requestBody["name"][0] + "\", \"" + requestBody["email"][0] + "\", \"" +
-//            requestBody["password"][0] + "\", \"" + requestBody["phone_num"][0] + "\", " +
-//            requestBody["weekly_cap"][0] + ", (SELECT emp_type_id FROM flexpooldb.employee_type " +
-//            "WHERE emp_type_name = \"" + requestBody["emp_type_name"][0] + "\"));";

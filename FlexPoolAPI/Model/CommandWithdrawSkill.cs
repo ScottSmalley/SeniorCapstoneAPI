@@ -1,7 +1,6 @@
 ﻿/*
  * Removes a record in our database that
  * represents an assigned skill to a person object.
- * 
  * -Scott Smalley
  */
 using System;
@@ -44,11 +43,11 @@ namespace FlexPoolAPI.Model
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem deleting the assigned skill from the database.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "unspecified error withdrawing skill." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

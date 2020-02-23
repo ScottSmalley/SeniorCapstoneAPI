@@ -4,6 +4,7 @@
  * FlexPool Project
  * Brandon Bezzant
  * Mike Daniel
+ * Joseph Dominguez-Virla
  * Scott Smalley
  * 
  * Summary:
@@ -16,7 +17,7 @@
  * the appropriate command and package it up to be 
  * sent back in a JSON format.
  * 
- * - Designed and developed by Scott Smalley. 
+ * - Developed by Scott Smalley and Joseph Dominguez-Virla.
  */
 using System;
 using Newtonsoft.Json;
@@ -46,7 +47,7 @@ namespace FlexPoolAPI
         /// </summary>
         /// <param name="apiGatewayRequest"></param>
         /// <returns></returns>
-         public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest)
+        public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest)
         //public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest, ILambdaContext lambdaContextnotepad)
         {
             Console.WriteLine(apiGatewayRequest.Path + "\n" + apiGatewayRequest.HttpMethod + "\n" + apiGatewayRequest.Body);

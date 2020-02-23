@@ -1,6 +1,5 @@
 ﻿/*
  * Represents a shift cancellation request.
- * 
  * -Scott Smalley
  */
 

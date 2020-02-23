@@ -1,7 +1,6 @@
 ﻿/*
  * Generates a Survey
  * in the database.
- * 
  * -Scott Smalley
  */
 using System;
@@ -44,11 +43,11 @@ namespace FlexPoolAPI.Model
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem executing the action.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "internal exception occurred." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

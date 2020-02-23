@@ -1,7 +1,6 @@
 ﻿/*
  * Returns all the existing shifts 
  * in the database.
- * 
  * -Scott Smalley
  */
 using System;
@@ -61,6 +60,13 @@ namespace FlexPoolAPI.Model
                 Console.WriteLine("ERROR: get_all_shift missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
+                return responseData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

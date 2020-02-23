@@ -1,7 +1,6 @@
 ﻿/*
  * Returns all the existing shifts 
  * that a specific department.
- * 
  * -Scott Smalley
  */
 using System;
@@ -62,6 +61,13 @@ namespace FlexPoolAPI.Model
                 Console.WriteLine("ERROR: get_emp_skills didn't receive a valid emp_id field.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
+                return responseData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

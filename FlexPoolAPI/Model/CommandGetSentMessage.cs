@@ -1,6 +1,5 @@
 ﻿/*
  * Gets all the messages that are sent by a specific user.
- * 
  * -Scott Smalley
  */
 using System;
@@ -39,7 +38,7 @@ namespace FlexPoolAPI.Model
                                 {
                                     msg_id = (int)rdr[0],
                                     receiver_id = (int)rdr[1],
-                                    date_sent = rdr[2].ToString(),
+                                    date_sent = (DateTime)rdr[2],
                                     msg_text = (string)rdr[3]
                                 };
                                 responseData.Add(newMsg.msg_id.ToString(), new string[] { JsonConvert.SerializeObject(newMsg) });
@@ -54,6 +53,13 @@ namespace FlexPoolAPI.Model
                 Console.WriteLine("ERROR: get_sent_message missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
+                return responseData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                responseData.Add("response", new string[] { "failure" });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

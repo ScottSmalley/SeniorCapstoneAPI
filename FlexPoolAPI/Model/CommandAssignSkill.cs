@@ -2,7 +2,6 @@
  * Generates a record in our assigned skill
  * database table. Represents a predefined skill
  * a person has.
- * 
  * -Scott Smalley
  */
 using System;
@@ -45,11 +44,11 @@ namespace FlexPoolAPI.Model
 
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem executing the action.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "unspecified problem assigning skill." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

@@ -1,7 +1,6 @@
 ﻿/*
  * Verifies the emp_id and password
  * given match what's in the database.
- * 
  * -Scott Smalley
  */
 using System;
@@ -70,6 +69,13 @@ namespace FlexPoolAPI.Model
                                 Console.WriteLine("There was a problem accessing the result from the DB.");
                                 responseData.Add("response", new string[] { "failure" });
                                 responseData.Add("reason", new string[] { "internal problem selecting login match." });
+                                return responseData;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("ERROR: " + e.Message);
+                                responseData.Add("response", new string[] { "failure" });
+                                responseData.Add("reason", new string[] { "unspecified problem." });
                                 return responseData;
                             }
                         }

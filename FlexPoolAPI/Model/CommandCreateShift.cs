@@ -1,7 +1,6 @@
 ﻿/*
  * Generates a Shift record
  * in the database.
- * 
  * -Scott Smalley
  */
 using System;
@@ -22,21 +21,23 @@ namespace FlexPoolAPI.Model
             {
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
-                    DateTime requestedDate = DateTime.Parse(requestBody["date"][0]);
                     conn.Open();
-                    string sql = "INSERT INTO flexpooldb.shift (date, duration, max_worker, mgr_id, dept_id, skill_id) " +
-                                  "VALUES(\"" + requestedDate.ToString("yyyy-MM-dd HH:mm:ss") + "\", " + requestBody["duration"][0] + ", " + requestBody["max_worker"][0] + ", " + requestBody["mgr_id"][0] + ", " +
-                                  "(SELECT dept_id FROM flexpooldb.dept_type WHERE dept_name = \"" + requestBody["dept_name"][0] + "\"), " +
-                                  "(SELECT skill_id FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill_name"][0] + "\")); ";
-
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    for(int dateIdx = 0; dateIdx < requestBody["date"].Length; dateIdx++)
                     {
-                        cmd.ExecuteNonQuery();
-                        responseData.Add("response", new string[] { "success" });
-                        return responseData;
+                        DateTime requestedDate = DateTime.Parse(requestBody["date"][dateIdx]);
+                        string sql = "INSERT INTO flexpooldb.shift (date, duration, max_worker, mgr_id, dept_id, skill_id) " +
+                                      "VALUES(\"" + requestedDate.ToString("yyyy-MM-dd HH:mm:ss") + "\", " + requestBody["duration"][0] + ", " + requestBody["max_worker"][0] + ", " + requestBody["mgr_id"][0] + ", " +
+                                      "(SELECT dept_id FROM flexpooldb.dept_type WHERE dept_name = \"" + requestBody["dept_name"][0] + "\"), " +
+                                      "(SELECT skill_id FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill_name"][0] + "\")); ";
+                        Console.WriteLine(sql);
+                        //Make a Command Object to then execute.
+                        using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
                     }
+                    responseData.Add("response", new string[] { "success" });
+                    return responseData;
                 }
             }
             catch (KeyNotFoundException)
@@ -46,11 +47,11 @@ namespace FlexPoolAPI.Model
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("ERROR: there was a problem executing the action.");
+                Console.WriteLine("ERROR: " + e.Message);
                 responseData.Add("response", new string[] { "failure" });
-                responseData.Add("reason", new string[] { "internal exception occurred." });
+                responseData.Add("reason", new string[] { "unspecified problem." });
                 return responseData;
             }
         }

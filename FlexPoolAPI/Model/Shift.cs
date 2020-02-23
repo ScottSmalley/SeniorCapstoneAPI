@@ -1,10 +1,11 @@
 ﻿/*
  * Represents a Shift an 
  * employee would sign up for.
- * 
  * -Scott Smalley
  */
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace FlexPoolAPI.Model
 {
