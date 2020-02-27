@@ -5,7 +5,7 @@ Formatted to be uploaded as an AWS Lambda function, it checks an HTTPRequest mes
 the object, there must be an "action" key/value pair with a value corresponding to an action for the API to perform.
 Depending on the "action" sent, the API returns either a message of success / failure or data.
 
-API Google doc of API commands: 
+API Google doc of API commands: https://docs.google.com/document/d/1FYa0JdBLtg6MJhsW2vNRi18ITzjd0Tyu29xi4rF9sxI/edit?usp=sharing
 
 FlexpoolScheduledEvents:
 Formatted to be uploaded as an AWS Lambda function, this group of solutions are intended to be targets for AWS 
