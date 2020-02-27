@@ -1,8 +1,9 @@
 ﻿/*
- * Generates a Dictionary of Person objects that 
- * are pulled from the DB. 
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -10,6 +11,10 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Returns the person or people specified from the database.
+    /// User can send multiple employee ids to get back multiple results.
+    /// </summary>
     class CommandGetPerson : ActionCommand
     {
         public CommandGetPerson(Action newAction) : base(newAction) { }
@@ -22,6 +27,7 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Grab all the data related for a specific person.
                     string sql = "SELECT emp_id, name, email, phone_num, weekly_hours, weekly_cap, flexpooldb.employee_type.emp_type_name FROM flexpooldb.person " +
                         "INNER JOIN flexpooldb.employee_type " +
                         "ON flexpooldb.person.emp_type = employee_type.emp_type_id " +
@@ -33,10 +39,13 @@ namespace FlexPoolAPI.Model
                     //Remove excess "," from sql statement.
                     sql = sql.Remove(sql.Length - 1);
                     sql += ");";
-                    Console.WriteLine(sql);
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -60,6 +69,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

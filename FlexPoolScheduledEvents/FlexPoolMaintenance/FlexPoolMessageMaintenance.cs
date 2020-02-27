@@ -2,9 +2,9 @@
   * Utah Valley University
   * CS4550 Capstone Project
   * FlexPool Project
-  * Brandon Bezzant
-  * Mike Daniel
-  * Scott Smalley
+  * Frontend: Brandon Bezzant
+  * Frontend: Mike Daniel
+  * Backend (meaning this entire solution project): Scott Smalley
   */
 
 using System;
@@ -20,6 +20,8 @@ namespace FlexPoolMaintenance
 {
     public class FlexPoolMessageMaintenance
     {
+        //Toggles console messages.
+        bool inDevMode = true;
         /// <summary>
         /// Queries and deletes entries in the database that are older than
         /// 3 months from today's date. Also checks for messages that were
@@ -28,13 +30,19 @@ namespace FlexPoolMaintenance
         /// </summary>
         public void DeleteOldMessages()
         {
-            Console.WriteLine("Delete Old Messages: working...");
+            if (inDevMode)
+            {
+                Console.WriteLine("Delete Old Messages: working...");
+            }
             string mySQLConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONN");
-            //string mySQLConnectionString = "server=<Server>;user=<User>;database=flexpooldb;port=<Port>;password=<Password>;";
 
             using (MySqlConnection conn = new MySqlConnection(mySQLConnectionString))
             {
                 conn.Open();
+                //Calculate what boundary value months to keep and what ones to delete.
+                //We perform this task every 1st of the month, so it keeps the previous
+                //3 months of messages. Meaning on April 1st, we should keep January, February
+                //and March messages.
                 DateTime currentDate = DateTime.UtcNow;
                 int currentMonth = currentDate.Month;
                 int threeMonthThreshold = currentMonth - 3;
@@ -55,7 +63,10 @@ namespace FlexPoolMaintenance
                         "WHERE date_sent < \"" + currentDate.Year + "-" + String.Format("{0:D2}", threeMonthThreshold) + "-01\" " +
                         "OR date_sent > \"" + currentDate.Year + "-" + String.Format("{0:D2}", currentMonth) + "-" + String.Format("{0:D2}", currentDate.Day) + "\";";
                 }
-                Console.WriteLine(sql);
+                if (inDevMode)
+                {
+                    Console.WriteLine(sql);
+                }
                 using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();

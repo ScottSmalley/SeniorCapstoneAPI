@@ -1,14 +1,18 @@
 ﻿/*
- * Flags a CancelRequest as reviewed
- * and approved.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a shift cancel request in the database.
+    /// </summary>
     class CommandDeleteCancelRequest : ActionCommand
     {
         public CommandDeleteCancelRequest(Action newAction) : base(newAction) { }
@@ -21,11 +25,14 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Delete the shift cancel request.
                     string sql = "DELETE FROM flexpooldb.cancel_shift_request " +
                                  "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
-
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

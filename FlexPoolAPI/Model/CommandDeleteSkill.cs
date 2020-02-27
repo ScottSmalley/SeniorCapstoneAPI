@@ -1,13 +1,18 @@
 ﻿/*
- * Deletes a skill from the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a skill record from the database.
+    /// </summary>
     class CommandDeleteSkill : ActionCommand
     {
         public CommandDeleteSkill(Action newAction) : base(newAction) { }
@@ -23,8 +28,10 @@ namespace FlexPoolAPI.Model
                     //Will revisit later to check other tables to clean them of data of this skill. 
                     string sql = "DELETE FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill"][0] + "\";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();
@@ -35,7 +42,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("Couldn't find key in dictionary.");
+                Console.WriteLine("missing item in the dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary" });
                 return responseData;

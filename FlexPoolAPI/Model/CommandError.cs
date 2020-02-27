@@ -1,20 +1,23 @@
 ﻿/*
- * Used to return errors in basic
- * communications. For the moment, 
- * if a user forgets the required "action" 
- * item in their request body, it'll send back
- * an error.
- * -Scott Smalley
- */
-using System;
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System.Collections.Generic;
-using System.Text;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Used to return errors to the user if
+    /// they didn't include an "action" item
+    /// in their sent data.
+    /// </summary>
     class CommandError : ActionCommand
     {
         public CommandError(Action newAction) : base(newAction) { }
+        
+        //Return back a failure message and the reason.
         public override Dictionary<string, string[]> Execute()
         {
             Dictionary<string, string[]> responseData = new Dictionary<string, string[]>();

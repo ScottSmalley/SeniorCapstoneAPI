@@ -1,13 +1,18 @@
 ﻿/*
- * Removes a frozen flag from a person.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Removes frozen status from a person.
+    /// </summary>
     class CommandUnfreezePerson : ActionCommand
     {
         public CommandUnfreezePerson(Action newAction) : base(newAction) { }
@@ -20,12 +25,15 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Reset the frozen flag to 0, meaning false in the database.
                     string sql = "UPDATE flexpooldb.person " +
                                  "SET is_frozen = 0 " +
                                  "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();
@@ -36,7 +44,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_all_shift missing item in dictionary.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

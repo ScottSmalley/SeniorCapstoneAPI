@@ -1,14 +1,16 @@
 ﻿/*
- * Represents a shift survey that
- * employees and managers fill out after every shift.
- * -Scott Smalley
- */
-using System;
-using System.Collections.Generic;
-using System.Text;
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Represents a shift survey completed
+    /// at the end of a shift.
+    /// </summary>
     class Survey
     {
         public int shift_id { get; set; }

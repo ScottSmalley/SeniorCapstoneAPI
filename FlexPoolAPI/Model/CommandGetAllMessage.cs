@@ -1,7 +1,9 @@
 ﻿/*
- * Gets all the messages that are sent by a specific user.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -9,6 +11,10 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the messages sent
+    /// by and received by a person.
+    /// </summary>
     class CommandGetAllMessage : ActionCommand
     {
         public CommandGetAllMessage(Action newAction) : base(newAction) { }
@@ -26,8 +32,11 @@ namespace FlexPoolAPI.Model
                     string sql = "SELECT msg_id, receiver_id, (SELECT name FROM flexpooldb.person WHERE emp_id = receiver_id), date_sent, msg_text " +
                                  "FROM flexpooldb.message " +
                                  "WHERE sender_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         //Executes the command, and returns the result as an array.
@@ -45,18 +54,19 @@ namespace FlexPoolAPI.Model
                                 };
                                 responseData.Add($"Sent Message {newMsg.msg_id}", new string[] { JsonConvert.SerializeObject(newMsg) });
                             }
-                            //return responseData;
                         }
                     }
                     //Select all the messages I received, and include the Sender's name in the results.
                     sql = "SELECT msg_id, sender_id, (SELECT name FROM flexpooldb.person WHERE emp_id = sender_id), date_sent, msg_text " +
                           "FROM flexpooldb.message " +
                           "WHERE receiver_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -78,7 +88,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_sent_message missing item in dictionary.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

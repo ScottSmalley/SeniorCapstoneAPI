@@ -16,3 +16,4 @@ C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\
 C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.AssemblyInfo.cs
 C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.dll
 C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.pdb
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolAPI\obj\Debug\netcoreapp2.1\FlexPoolAPI.csprojAssemblyReference.cache

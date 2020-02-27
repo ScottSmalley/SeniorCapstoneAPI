@@ -1,13 +1,19 @@
 ﻿/*
- * Deletes a specified person in the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a person record in the database,
+    /// and migrates the record to a storage table.
+    /// </summary>
     class CommandDeletePerson : ActionCommand
     {
         public CommandDeletePerson(Action newAction) : base(newAction) { }
@@ -25,7 +31,11 @@ namespace FlexPoolAPI.Model
                     string sql = "INSERT INTO flexpooldb.person_storage (emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen) " + 
                                  "SELECT emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen FROM flexpooldb.person " +
                                  "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmdMigratePerson = new MySqlCommand(sql, conn))
                     {
                         cmdMigratePerson.ExecuteNonQuery();
@@ -33,8 +43,11 @@ namespace FlexPoolAPI.Model
 
                     //Deletes person from the person table.
                     sql = "DELETE FROM flexpooldb.person WHERE emp_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmdDeletePerson = new MySqlCommand(sql, conn))
                     {
                         cmdDeletePerson.ExecuteNonQuery();

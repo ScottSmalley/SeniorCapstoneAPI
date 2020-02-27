@@ -1,13 +1,18 @@
 ﻿/*
- * Creates a message and inserts it into the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Creates a message for another person to read in the database.
+    /// </summary>
     class CommandSendMessage : ActionCommand
     {
         public CommandSendMessage(Action newAction) : base(newAction) { }
@@ -23,10 +28,12 @@ namespace FlexPoolAPI.Model
                     conn.Open();
                     string sql = "INSERT INTO flexpooldb.message (sender_id, receiver_id, date_sent, msg_text)" +
                                 " VALUES(" + requestBody["sender_id"][0] + ", " + requestBody["receiver_id"][0] + 
-                                ", \"" + newAction.GetDateTimeUTC() + "\", \"" + requestBody["msg_text"][0] + "\");"; 
+                                ", \"" + newAction.GetDateTimeUTC() + "\", \"" + requestBody["msg_text"][0] + "\");";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

@@ -1,8 +1,9 @@
 ﻿/*
- * Returns all the existing shifts 
- * that a specific department.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -10,6 +11,10 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the shifts available for a 
+    /// specified department.
+    /// </summary>
     class CommandGetShiftByDept : ActionCommand
     {
         public CommandGetShiftByDept(Action newAction) : base(newAction) { }
@@ -23,17 +28,19 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Get all the shifts based on department id.
                     string sql = "SELECT shift_id, date, duration, num_worker, max_worker, mgr_id, dept_id, skill_name " +
                                  "FROM flexpooldb.shift " +
                                  "INNER JOIN flexpooldb.skill " +
                                  "ON flexpooldb.shift.skill_id = flexpooldb.skill.skill_id AND " +
                                  "flexpooldb.shift.dept_id = (SELECT dept_id FROM flexpooldb.dept_type WHERE dept_name = \"" + requestBody["dept_name"][0] + "\");";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -58,7 +65,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_emp_skills didn't receive a valid emp_id field.");
+                Console.WriteLine("ERROR: didn't receive a valid emp_id field.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

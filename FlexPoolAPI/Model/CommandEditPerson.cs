@@ -1,14 +1,19 @@
 ﻿/*
- * Edits a Person in our database.
- * their employee id cannot be changed.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Allows a user to edit a person.
+    /// Note: They cannot change employee ids.
+    /// </summary>
     class CommandEditPerson : ActionCommand
     {
         public CommandEditPerson(Action newAction) : base(newAction) { }
@@ -21,17 +26,19 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Checks the Dictionary for each field available,
+                    //if it exists, add the change to our SQL statement.
                     string sql = "UPDATE flexpooldb.person " +
                                 "SET ";
-                    /* Two-fold use:
-                     * 1st: acts as a format helper to get the
+                    /* isFirstField:
+                     * 1) Acts as a format helper to get the
                      * commas where they need to go.
-                     * 2nd: Tells me after the loop whether there
+                     * 2) Tells me after the loop if there
                      * was any fields in the requestBody.
                      */
                     bool isFirstField = true;
                     //Cycle through Dictionary for fields to update.
-                    foreach (String field in requestBody.Keys)
+                    foreach (string field in requestBody.Keys)
                     {
                         if (!field.Equals("action") && !field.Equals("emp_id"))
                         {
@@ -90,15 +97,20 @@ namespace FlexPoolAPI.Model
                     }
                     else
                     {
-                        Console.WriteLine(sql);
+                        if (inDevMode)
+                        {
+                            Console.WriteLine(sql);
+                        }
                         Console.WriteLine("ERROR: problem with building the sql statement.");
                         responseData.Add("response", new string[] { "failure" });
                         responseData.Add("reason", new string[] { "internal problem editing." });
                         return responseData;
                     }
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

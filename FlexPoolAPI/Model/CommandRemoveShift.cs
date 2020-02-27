@@ -1,15 +1,21 @@
 ﻿/*
- * Deletes an assignment record in the
- * database for a specific employee and
- * a shift they signed up for previously.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a shift assignment record for a specified 
+    /// person and shift, and migrates the record to 
+    /// a storage table. Also reduce the number of
+    /// signed up people from the shift.
+    /// </summary>
     class CommandRemoveShift : ActionCommand
     {
         public CommandRemoveShift(Action newAction) : base(newAction) { }
@@ -22,14 +28,18 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //If in debug mode, just delete the assignment, regardless of any conditions.
                     if (inDebugMode)
                     {
                         //Delete the record assigning the shift to the employee.
                         string sql = "DELETE FROM flexpooldb.assigned_shift " +
                                      "WHERE shift_id = " + requestBody["shift_id"][0] + " " +
                                      "AND emp_id = " + requestBody["emp_id"][0] + ";";
-                        Console.WriteLine(sql);
-                        //Make a Command Object to then execute.
+
+                        if (inDevMode)
+                        {
+                            Console.WriteLine(sql);
+                        }
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
                             cmd.ExecuteNonQuery();
@@ -43,8 +53,11 @@ namespace FlexPoolAPI.Model
                         string sql = "UPDATE flexpooldb.shift " +
                                      "SET num_worker = num_worker - 1 " +
                                      "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
-                        Console.WriteLine(sql);
-                        //Make a Command Object to then execute.
+                        
+                        if (inDevMode)
+                        {
+                            Console.WriteLine(sql);
+                        }
                         using (MySqlCommand cmdIncrement = new MySqlCommand(sql, conn))
                         {
                             cmdIncrement.ExecuteNonQuery();
@@ -73,8 +86,11 @@ namespace FlexPoolAPI.Model
                         sql = "DELETE FROM flexpooldb.assigned_shift " +
                               "WHERE shift_id = " + requestBody["shift_id"][0] + " " +
                               "AND emp_id = " + requestBody["emp_id"][0] + ";";
-                        Console.WriteLine(sql);
-                        //Make a Command Object to then execute.
+                        
+                        if (inDevMode)
+                        {
+                            Console.WriteLine(sql);
+                        }
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
                             cmd.ExecuteNonQuery();

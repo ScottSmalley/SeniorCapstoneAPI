@@ -1,14 +1,17 @@
 ﻿/*
- * Represents a Shift an 
- * employee would sign up for.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Represents a shift that people
+    /// sign up for.
+    /// </summary>
     class Shift
     {
         public int shift_id { get; set; }

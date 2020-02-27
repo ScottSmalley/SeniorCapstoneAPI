@@ -1,8 +1,9 @@
 ﻿/*
- * Returns all the existing shifts 
- * in the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -10,6 +11,9 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the shifts in the database.
+    /// </summary>
     class CommandGetAllShift : ActionCommand
     {
         public CommandGetAllShift(Action newAction) : base(newAction) { }
@@ -21,6 +25,7 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Get all shifts, including the department name, and skill required name.
                     string sql = "SELECT shift_id, date, duration, num_worker, max_worker, mgr_id, dept_name, skill_name " +
                                   "FROM flexpooldb.shift " + 
                                   "INNER JOIN flexpooldb.dept_type " +
@@ -28,11 +33,12 @@ namespace FlexPoolAPI.Model
                                   "INNER JOIN flexpooldb.skill " +
                                   "ON flexpooldb.shift.skill_id = flexpooldb.skill.skill_id;";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -57,7 +63,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_all_shift missing item in dictionary.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

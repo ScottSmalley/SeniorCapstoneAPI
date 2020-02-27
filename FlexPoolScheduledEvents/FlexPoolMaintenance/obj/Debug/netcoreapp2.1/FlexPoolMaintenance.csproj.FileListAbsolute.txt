@@ -7,3 +7,13 @@ C:\Users\scott\Desktop\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\net
 C:\Users\scott\Desktop\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.AssemblyInfo.cs
 C:\Users\scott\Desktop\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.dll
 C:\Users\scott\Desktop\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.pdb
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\bin\Debug\netcoreapp2.1\FlexPoolMaintenance.deps.json
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\bin\Debug\netcoreapp2.1\FlexPoolMaintenance.runtimeconfig.json
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\bin\Debug\netcoreapp2.1\FlexPoolMaintenance.runtimeconfig.dev.json
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\bin\Debug\netcoreapp2.1\FlexPoolMaintenance.dll
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\bin\Debug\netcoreapp2.1\FlexPoolMaintenance.pdb
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.csprojAssemblyReference.cache
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.AssemblyInfoInputs.cache
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.AssemblyInfo.cs
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.dll
+C:\Users\scott\Desktop\FlexPoolAPI\flexpool\FlexPoolScheduledEvents\FlexPoolMaintenance\obj\Debug\netcoreapp2.1\FlexPoolMaintenance.pdb

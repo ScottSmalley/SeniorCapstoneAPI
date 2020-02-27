@@ -1,14 +1,19 @@
 ﻿/*
- * Flags a CancelRequest as reviewed
- * and approved.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Flags a CancelRequest as reviewed
+    /// and approved in the database.
+    /// </summary>
     class CommandApproveCancelRequest: ActionCommand
     {
         public CommandApproveCancelRequest(Action newAction) : base(newAction) { }
@@ -21,12 +26,15 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Update the values for a specified shift to be flagged as true, meaning 
+                    //the cancellation request has been reviewed and approved.
                     string sql = "UPDATE flexpooldb.cancel_shift_request " +
                                  "SET reviewed = 1, is_approved = 1 " +
                                  "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
-
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

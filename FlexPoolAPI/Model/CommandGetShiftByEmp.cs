@@ -1,9 +1,9 @@
 ﻿/*
- * Returns all the existing shifts 
- * that a specific employee has signed
- * up for.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -11,6 +11,10 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the shifts a specific person
+    /// has signed up for.
+    /// </summary>
     class CommandGetShiftByEmp : ActionCommand
     {
         public CommandGetShiftByEmp(Action newAction) : base(newAction) { }
@@ -24,6 +28,7 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Grab all the shifts a specified person has signed up for, including the department name and skill name.
                     string sql = "SELECT shifts.shift_id, shifts.date, shifts.duration, shifts.num_worker, shifts.max_worker, shifts.mgr_id, shifts.dept_name, shifts.skill_name " +
                                  "FROM(SELECT flexpooldb.assigned_shift.emp_id, flexpooldb.shift.shift_id, date, duration, num_worker, max_worker, mgr_id, flexpooldb.dept_type.dept_name, flexpooldb.skill.skill_name " +
                                  "FROM flexpooldb.shift " +
@@ -35,11 +40,12 @@ namespace FlexPoolAPI.Model
                                  "ON flexpooldb.shift.dept_id = flexpooldb.dept_type.dept_id) AS shifts " +
                                  "WHERE shifts.emp_id = " + requestBody["emp_id"][0] + ";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -64,7 +70,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_emp_skills didn't receive a valid emp_id field.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

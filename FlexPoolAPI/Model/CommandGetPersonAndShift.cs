@@ -1,16 +1,19 @@
 ﻿/*
- * Returns an employee's information, the shifts they're
- * signed up for, and all the shifts currently available.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the information on a specified person,
+    /// in addition all the shifts they've signed up for,
+    /// and the rest of the shifts that are available.
+    /// </summary>
     class CommandGetPersonAndShift : ActionCommand
     {
         public CommandGetPersonAndShift(Action newAction) : base(newAction) { }
@@ -21,16 +24,19 @@ namespace FlexPoolAPI.Model
 
             try
             {
-                //Get Person information.
+                //Modify the dictionary to mimic a get_person request.
+                //Then send the data to a new Command Object and store the results.
                 newAction.SetActionItem("get_person");
                 newAction.AddRequestItem("emp_ids", new string[] { requestBody["emp_id"][0] });
                 responseData = new CommandGetPerson(newAction).Execute();
 
-                //Get all the shifts that are assigned to this person's id.
+                //Modify the dictionary to mimic a get_shift_by_emp request.
+                //Then send the data to a new Command Object and store the results.
                 newAction.SetActionItem("get_shift_by_emp");
                 Dictionary<string, string[]> employeeShifts = new CommandGetShiftByEmp(newAction).Execute();
 
-                //Get all the shifts for the current month.
+                //Modify the dictionary to mimic a get_all_shift request.
+                //Then send the data to a new Command Object and store the results.
                 newAction.SetActionItem("get_all_shift");
                 Dictionary<string, string[]> allShifts = new CommandGetAllShift(newAction).Execute();
 
@@ -66,6 +72,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

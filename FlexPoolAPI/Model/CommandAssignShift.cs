@@ -1,14 +1,24 @@
 ﻿/*
- * Creates a record in the DB that
- * an employee signed up for a shift.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Creates a shift assignment
+    /// record in the database under
+    /// these conditions:
+    /// The shift isn't full.
+    /// The employee has the skillset.
+    /// The employee has the work hours available.
+    /// The employee isn't under a frozen status.
+    /// </summary>
     class CommandAssignShift : ActionCommand
     {
         public CommandAssignShift(Action newAction) : base(newAction) { }
@@ -21,6 +31,8 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    
+                    //Create the assignment record without checking conditions.
                     if (inDebugMode)
                     {
                         //Insert a record into assignment table to complete the command.
@@ -28,7 +40,6 @@ namespace FlexPoolAPI.Model
                              "VALUES(" + requestBody["shift_id"][0] + ", " + requestBody["emp_id"][0] + ");";
 
                         Console.WriteLine(sql);
-                        //Make a Command Object to then execute.
                         using (MySqlCommand cmdInsert = new MySqlCommand(sql, conn))
                         {
                             cmdInsert.ExecuteNonQuery();
@@ -36,6 +47,7 @@ namespace FlexPoolAPI.Model
                             return responseData;
                         }
                     }
+                    //Do the condition checking.
                     else
                     {
                         //Check to see if this employee is frozen.
@@ -54,23 +66,29 @@ namespace FlexPoolAPI.Model
                                 return responseData;
                             }
                         }
-                        //Check to see if this employee has the room in their weekly_hours.
+                        //Check to see if this employee has the room in their weekly_hours limit.
                         sql = "SELECT ((weekly_cap - weekly_hours) - (SELECT (duration / 60) FROM flexpooldb.shift " +
                                      "WHERE shift_id = " + requestBody["shift_id"][0] + ")) FROM flexpooldb.person " +
                                      "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
-
-                        Console.WriteLine(sql);
+                        if (inDevMode)
+                        {
+                            Console.WriteLine(sql);
+                        }
                         using (MySqlCommand cmdHours = new MySqlCommand(sql, conn))
                         {
                             object resultHours = cmdHours.ExecuteScalar();
                             int empWeeklyHoursLeft = Convert.ToInt32(resultHours);
+                            //If they have 0 or more hours left after assigning the shift, they have room for this shift.
                             if (empWeeklyHoursLeft >= 0)
                             {
                                 //Check to see if this employee has the skill to sign up for this shift.
                                 sql = "SELECT COUNT(*) FROM flexpooldb.assigned_skill " +
                                       "WHERE emp_id = " + requestBody["emp_id"][0] + " AND " +
                                       "skill_id = (SELECT skill_id FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ");";
-                                Console.WriteLine(sql);
+                                if (inDevMode)
+                                {
+                                    Console.WriteLine(sql);
+                                }
                                 using (MySqlCommand cmdSkill = new MySqlCommand(sql, conn))
                                 {
                                     object resultSkill = cmdSkill.ExecuteScalar();
@@ -82,22 +100,26 @@ namespace FlexPoolAPI.Model
                                               "FROM flexpooldb.shift " +
                                               "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
 
-                                        Console.WriteLine(sql);
-                                        //Make a Command Object to then execute.
+                                        if (inDevMode)
+                                        {
+                                            Console.WriteLine(sql);
+                                        }
                                         using (MySqlCommand cmdShift = new MySqlCommand(sql, conn))
                                         {
                                             object result = cmdShift.ExecuteScalar();
                                             int shiftSpotsRemaining = Convert.ToInt32(result);
 
-                                            //If there's 1 or more open positions
+                                            //If there's 1 or more open positions, then continue, else send an error back.
                                             if (shiftSpotsRemaining > 0)
                                             {
                                                 //Insert a record into assignment table to complete the command.
                                                 sql = "INSERT INTO flexpooldb.assigned_shift " +
                                                       "VALUES(" + requestBody["shift_id"][0] + ", " + requestBody["emp_id"][0] + ");";
 
-                                                Console.WriteLine(sql);
-                                                //Make a Command Object to then execute.
+                                                if (inDevMode)
+                                                {
+                                                    Console.WriteLine(sql);
+                                                }
                                                 using (MySqlCommand cmdInsert = new MySqlCommand(sql, conn))
                                                 {
                                                     cmdInsert.ExecuteNonQuery();
@@ -105,25 +127,30 @@ namespace FlexPoolAPI.Model
                                                     //return responseData;
                                                 }
 
-                                                //Increment the counter
+                                                //Increment the shift's assigned workers counter.
                                                 sql = "UPDATE flexpooldb.shift " +
                                                       "SET num_worker = num_worker + 1 " +
                                                       "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
 
-                                                Console.WriteLine(sql);
-                                                //Make a Command Object to then execute.
+                                                if (inDevMode)
+                                                {
+                                                    Console.WriteLine(sql);
+                                                }
                                                 using (MySqlCommand cmdInsertWorkerCount = new MySqlCommand(sql, conn))
                                                 {
                                                     cmdInsertWorkerCount.ExecuteNonQuery();
                                                 }
 
-                                                //Increment the person's hours.
+                                                //Increment the person's work hours now that they're assigned the shift.
                                                 sql = "UPDATE flexpooldb.person " +
                                                       "SET weekly_hours = weekly_hours + " +
                                                       "((SELECT duration FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") / 60) " +
                                                       "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
 
-                                                Console.WriteLine(sql);
+                                                if (inDevMode)
+                                                {
+                                                    Console.WriteLine(sql);
+                                                }
                                                 using (MySqlCommand cmdInsertHours = new MySqlCommand(sql, conn))
                                                 {
                                                     cmdInsertHours.ExecuteNonQuery();
@@ -183,6 +210,8 @@ namespace FlexPoolAPI.Model
             }
             catch (Exception e)
             {
+                //If they've already been assigned the shift, the database will
+                //kick back a duplicate key error. We can send this along to the user.
                 if (e.Message.Contains("Duplicate entry"))
                 {
                     Console.WriteLine("ERROR: duplicate key");

@@ -1,13 +1,18 @@
 ﻿/*
- * Deletes a message from the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a message in the database.
+    /// </summary>
     class CommandDeleteMessage : ActionCommand
     {
         public CommandDeleteMessage(Action newAction) : base(newAction) { }
@@ -20,11 +25,13 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    //Will revisit later to check other tables to clean them of data of this skill. 
+                    //Delete the message according to the message id given.
                     string sql = "DELETE FROM flexpooldb.message WHERE msg_id = " + requestBody["msg_id"][0] + ";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

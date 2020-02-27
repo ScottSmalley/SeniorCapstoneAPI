@@ -1,14 +1,20 @@
 ﻿/*
- * Flags a CancelRequest as reviewed
- * and declined.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Flags a shift cancellation request
+    /// as reviewed, but flags the request
+    /// as unapproved.
+    /// </summary>
     class CommandUnapproveCancelRequest : ActionCommand
     {
         public CommandUnapproveCancelRequest(Action newAction) : base(newAction) { }
@@ -25,8 +31,10 @@ namespace FlexPoolAPI.Model
                                  "SET reviewed = 1, is_approved = 0 " +
                                  "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

@@ -1,13 +1,16 @@
 ﻿/*
- * Represents a Message between two employees.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Represents a message between two people.
+    /// </summary>
     class Message
     {
         public int msg_id { get; set; }

@@ -1,13 +1,18 @@
 ﻿/*
- * Edits a skill in our database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Edits the name of a skill in the database.
+    /// </summary>
     class CommandEditSkill : ActionCommand
     {
         public CommandEditSkill(Action newAction) : base(newAction) { }
@@ -20,13 +25,16 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Find the old skill record, and update the name associated with it.
                     string sql = "UPDATE flexpooldb.skill AS updateSkill " +
                         "INNER JOIN flexpooldb.skill as oldSkill " +
                         "SET updateSkill.skill_name = \"" + requestBody["new_skill_name"][0] + "\" " +
                         "WHERE updateSkill.skill_name = \"" + requestBody["old_skill_name"][0] + "\";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

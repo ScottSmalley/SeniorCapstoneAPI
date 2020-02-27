@@ -1,7 +1,9 @@
 ﻿/*
- * Gets all the cancel requests for a specific shift manager.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -9,6 +11,9 @@ using Newtonsoft.Json;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Gets all the shift cancellation requests from the database.
+    /// </summary>
     class CommandGetCancelRequest : ActionCommand
     {
         public CommandGetCancelRequest(Action newAction): base(newAction) { }
@@ -22,16 +27,18 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Get the cancellation requests based on the manager sent.
                     string sql = "SELECT flexpooldb.cancel_shift_request.shift_id, emp_id, text, reviewed, is_approved FROM flexpooldb.cancel_shift_request " +
                                  "INNER JOIN(SELECT shift_id FROM flexpooldb.shift " +
                                  "WHERE mgr_id = " + requestBody["mgr_id"][0] + ") AS shifts " +
                                  "WHERE flexpooldb.cancel_shift_request.shift_id = shifts.shift_id;";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        //Executes the command, and returns the result as an array.
                         using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
                             int requestCtr = 0;
@@ -54,7 +61,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_sent_message missing item in dictionary.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;

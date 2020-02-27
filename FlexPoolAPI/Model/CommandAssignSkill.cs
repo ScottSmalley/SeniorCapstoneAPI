@@ -1,15 +1,19 @@
 ﻿/*
- * Generates a record in our assigned skill
- * database table. Represents a predefined skill
- * a person has.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Creates a skill assignment
+    /// record in the database.
+    /// </summary>
     class CommandAssignSkill : ActionCommand
     {
         public CommandAssignSkill(Action newAction) : base(newAction) { }
@@ -22,12 +26,16 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Create an assignment record by fetching the skill_id from the skill table. Then
+                    //Insert the record into the assignment table.
                     string sql = "INSERT INTO flexpooldb.assigned_skill (skill_id, emp_id, assigned_date, hr_id)" +
                                 " VALUES((select skill_id from flexpooldb.skill where skill_name = \"" + requestBody["skill"][0] +
                                 "\"), " + requestBody["emp_id"][0] + ", \"" + newAction.GetDateTimeUTC() + "\", " + requestBody["hr_id"][0] + ");";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

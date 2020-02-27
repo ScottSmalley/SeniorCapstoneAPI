@@ -1,16 +1,20 @@
 ﻿/*
- * Represents the request given by
- * the user. This stores helpful information
- * such as the request Dictionary, Time conversion,
- * our MySQL connection, and getter for the "action" item.
- * 
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    ///  Represents the request given by
+    ///  the user.This stores helpful information
+    ///  such as the request Dictionary, Time conversion methods,
+    ///  our MySQL connection, and getter for the "action" item.
+    /// </summary>
     public class Action
     {
         private Dictionary<string, string[]> requestBody;
@@ -21,6 +25,11 @@ namespace FlexPoolAPI.Model
             this.sqlConn = sqlConn;
         }
 
+        /// <summary>
+        /// Returns the "action" item 
+        /// in the dictionary.
+        /// </summary>
+        /// <returns></returns>
         public string GetActionItem()
         {
             try
@@ -32,6 +41,12 @@ namespace FlexPoolAPI.Model
                 return "Not Found.";
             }
         }
+
+        /// <summary>
+        /// Allows a user to replace the "action" item
+        /// in the Dictionary.
+        /// </summary>
+        /// <param name="newData"></param>
         public void SetActionItem(string newData)
         {
             try
@@ -45,16 +60,29 @@ namespace FlexPoolAPI.Model
             }
         }
 
+        /// <summary>
+        /// Add a data item to the Dictionary.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data"></param>
         public void AddRequestItem(string key, string[] data)
         {
             requestBody.Add(key, data);
         }
 
+        /// <summary>
+        /// Returns the Dictionary of items sent by the user.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, string[]> GetRequestBody()
         {
             return requestBody;
         }
 
+        /// <summary>
+        /// Returns the sql connection string.
+        /// </summary>
+        /// <returns></returns>
         public string GetSQLConn()
         {
             return sqlConn;
@@ -63,7 +91,6 @@ namespace FlexPoolAPI.Model
         /// <summary>
         /// Returns the Universal Time currently
         /// in the format that MySQL requires.
-        /// -Scott Smalley
         /// </summary>
         /// <returns></returns>
         public string GetDateTimeUTC()

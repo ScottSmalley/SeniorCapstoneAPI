@@ -1,13 +1,19 @@
 ﻿/*
- * Deletes a survey from the database.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Deletes a survey from the database,
+    /// and migrates it to a storage table.
+    /// </summary>
     class CommandDeleteSurvey : ActionCommand
     {
         public CommandDeleteSurvey(Action newAction) : base(newAction) { }
@@ -25,7 +31,10 @@ namespace FlexPoolAPI.Model
                     string sql = "INSERT INTO flexpooldb.shift_survey_storage (emp_id, shift_id, mgr_id, rating, text) " +
                                  "SELECT emp_id, shift_id, mgr_id, rating, text FROM flexpooldb.shift_survey " +
                                  "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmdMigrateShift = new MySqlCommand(sql, conn))
                     {
                         cmdMigrateShift.ExecuteNonQuery();
@@ -34,8 +43,11 @@ namespace FlexPoolAPI.Model
                     //Delete survey record from shift_survey.
                     sql = "DELETE FROM flexpooldb.shift_survey " +
                           "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmdDeleteSurvey = new MySqlCommand(sql, conn))
                     {
                         cmdDeleteSurvey.ExecuteNonQuery();
@@ -46,7 +58,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("Couldn't find key in dictionary.");
+                Console.WriteLine("missing key in the dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary" });
                 return responseData;

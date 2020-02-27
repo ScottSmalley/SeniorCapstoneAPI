@@ -1,15 +1,20 @@
 ﻿/*
- * Modifies all the shift records
- * for a specific department to a new
- * manager id.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Changes the manager associated
+    /// with any shifts that are still 
+    /// scheduled.
+    /// </summary>
     class CommandEditDeptMgr : ActionCommand
     {
         public CommandEditDeptMgr(Action newAction): base(newAction) { }
@@ -26,8 +31,10 @@ namespace FlexPoolAPI.Model
                                  "SET mgr_id = " + requestBody["new_mgr_id"][0] + " " +
                                  "WHERE dept_id = (SELECT dept_id FROM flexpooldb.dept_type WHERE dept_name = \"" + requestBody["dept_name"][0] + "\");";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();

@@ -1,11 +1,15 @@
 ﻿/*
- * Used to determine which type of command to use.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 namespace FlexPoolAPI.Model
 {
     /// <summary>
-    /// This class is to determine which ActionCommand object to return to the caller.
+    /// Determines which type of Command Object
+    /// based on the "action" item listed in the 
+    /// Action parameter.
     /// </summary>
     class ActionParser
     {
@@ -13,6 +17,7 @@ namespace FlexPoolAPI.Model
         {
             switch (newAction.GetActionItem())
             {
+            //Person
                 case "get_person":
                     return new CommandGetPerson(newAction);
                 case "create_person":
@@ -29,6 +34,7 @@ namespace FlexPoolAPI.Model
                     return new CommandUnfreezePerson(newAction);
                 case "authenticate":
                     return new CommandAuthenticate(newAction);
+            //Skill
                 case "assign_skill":
                     return new CommandAssignSkill(newAction);
                 case "withdraw_skill":
@@ -43,6 +49,7 @@ namespace FlexPoolAPI.Model
                     return new CommandGetAllSkill(newAction);
                 case "get_emp_skill":
                     return new CommandGetEmpSkill(newAction);
+            //Message
                 case "send_message":
                     return new CommandSendMessage(newAction);
                 case "delete_message":
@@ -53,6 +60,7 @@ namespace FlexPoolAPI.Model
                     return new CommandGetReceivedMessage(newAction);
                 case "get_all_message":
                     return new CommandGetAllMessage(newAction);
+            //Shift
                 case "create_shift":
                     return new CommandCreateShift(newAction);
                 case "delete_shift":
@@ -71,6 +79,9 @@ namespace FlexPoolAPI.Model
                     return new CommandGetShiftByEmp(newAction);
                 case "get_shift_by_skill":
                     return new CommandGetShiftBySkill(newAction);
+                case "get_person_and_shift":
+                    return new CommandGetPersonAndShift(newAction);
+            //Cancel Request
                 case "send_cancel_request":
                     return new CommandSendCancelRequest(newAction);
                 case "delete_cancel_request":
@@ -81,18 +92,22 @@ namespace FlexPoolAPI.Model
                     return new CommandApproveCancelRequest(newAction);
                 case "unapprove_cancel_request":
                     return new CommandUnapproveCancelRequest(newAction);
-                case "get_person_and_shift":
-                    return new CommandGetPersonAndShift(newAction);
+            //Department
                 case "get_all_dept":
                     return new CommandGetAllDept(newAction);
+            //Survey
                 case "create_survey":
                     return new CommandCreateSurvey(newAction);
                 case "delete_survey":
                     return new CommandDeleteSurvey(newAction);
                 case "get_all_survey":
                     return new CommandGetAllSurvey(newAction);
+             
+                //If the "action" item isn't listed, send back
+                //an error object.
+                default:
+                    return new CommandError(newAction);
             }
-            return new CommandError(newAction);
         }
     }
 }

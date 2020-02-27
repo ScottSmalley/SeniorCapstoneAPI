@@ -1,20 +1,15 @@
 ﻿/*
- * Utah Valley University
- * CS4400 Capstone Project
- * FlexPool Project
- * Brandon Bezzant
- * Mike Daniel
- * Joseph Dominguez-Virla
- * Scott Smalley
- * 
- * Represents an employee in our database.
- */
-using System;
-using System.Collections.Generic;
-using System.Text;
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Represents a person or employee in the database.
+    /// </summary>
     class Person
     {
         public int emp_id { get; set; }

@@ -1,14 +1,20 @@
 ﻿/*
- * Flags a person in the database 
- * as frozen.
- * -Scott Smalley
- */
+* Scott Smalley
+* Senior - Software Engineering
+* Utah Valley University
+* scottsmalley90@gmail.com
+*/
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
 namespace FlexPoolAPI.Model
 {
+    /// <summary>
+    /// Flags a person frozen, which is used
+    /// by other Commands to see if they
+    /// can sign up for things like shifts.
+    /// </summary>
     class CommandFreezePerson : ActionCommand
     {
         public CommandFreezePerson(Action newAction): base(newAction) { }
@@ -21,12 +27,15 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
+                    //Set their frozen flag to true.
                     string sql = "UPDATE flexpooldb.person " +
                                  "SET is_frozen = 1 " +
                                  "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
 
-                    Console.WriteLine(sql);
-                    //Make a Command Object to then execute.
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();
@@ -37,7 +46,7 @@ namespace FlexPoolAPI.Model
             }
             catch (KeyNotFoundException)
             {
-                Console.WriteLine("ERROR: get_all_shift missing item in dictionary.");
+                Console.WriteLine("ERROR: missing item in dictionary.");
                 responseData.Add("response", new string[] { "failure" });
                 responseData.Add("reason", new string[] { "missing item in dictionary." });
                 return responseData;
