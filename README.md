@@ -7,9 +7,9 @@ Depending on the "action" sent, the API returns either a message of success / fa
 
 API Google doc of API commands: https://docs.google.com/document/d/1FYa0JdBLtg6MJhsW2vNRi18ITzjd0Tyu29xi4rF9sxI/edit?usp=sharing
 
-FlexpoolScheduledEvents:
+FlexpoolMaintenance:
 Formatted to be uploaded as an AWS Lambda function, this group of solutions are intended to be targets for AWS 
-CloudWatch to schedule maintenance on our database. These commands are not accessible by a regular user.
+CloudWatch Scheduled Event to schedule maintenance on our database. These commands are not accessible by a regular user.
 
 To be completed by April 30,2020.
 Scott Smalley
