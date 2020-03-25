@@ -28,7 +28,7 @@ namespace FlexPoolAPI.Model
                     conn.Open();
                     
                     //Create a storage record for the survey.
-                    string sql = "INSERT INTO flexpooldb.shift_survey_storage (emp_id, shift_id, mgr_id, rating, text) " +
+                    string sql = "REPLACE INTO flexpooldb.shift_survey_storage (emp_id, shift_id, mgr_id, rating, text) " +
                                  "SELECT emp_id, shift_id, mgr_id, rating, text FROM flexpooldb.shift_survey " +
                                  "WHERE shift_id = " + requestBody["shift_id"][0] + " AND emp_id = " + requestBody["emp_id"][0] + ";";
                     if (inDevMode)

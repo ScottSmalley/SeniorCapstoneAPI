@@ -29,7 +29,7 @@ namespace FlexPoolAPI.Model
                 {
                     conn.Open();
                     //Select all the messages that I sent, and include the Receiver's name in the results.
-                    string sql = "SELECT msg_id, receiver_id, (SELECT name FROM flexpooldb.person WHERE emp_id = receiver_id), date_sent, msg_text " +
+                    string sql = "SELECT msg_id, receiver_id, (SELECT name FROM flexpooldb.person WHERE emp_id = receiver_id), date_sent, msg_text, sender_read, receiver_read " +
                                  "FROM flexpooldb.message " +
                                  "WHERE sender_id = " + requestBody["emp_id"][0] + ";";
 
@@ -50,14 +50,16 @@ namespace FlexPoolAPI.Model
                                     receiver_id = (int)rdr[1],
                                     receiver_name = (string)rdr[2],
                                     date_sent = (DateTime)rdr[3],
-                                    msg_text = (string)rdr[4]
+                                    msg_text = (string)rdr[4],
+                                    sender_read = Int32.Parse(rdr[5].ToString()),
+                                    receiver_read = Int32.Parse(rdr[6].ToString())
                                 };
                                 responseData.Add($"Sent Message {newMsg.msg_id}", new string[] { JsonConvert.SerializeObject(newMsg) });
                             }
                         }
                     }
                     //Select all the messages I received, and include the Sender's name in the results.
-                    sql = "SELECT msg_id, sender_id, (SELECT name FROM flexpooldb.person WHERE emp_id = sender_id), date_sent, msg_text " +
+                    sql = "SELECT msg_id, sender_id, (SELECT name FROM flexpooldb.person WHERE emp_id = sender_id), date_sent, msg_text, sender_read, receiver_read " +
                           "FROM flexpooldb.message " +
                           "WHERE receiver_id = " + requestBody["emp_id"][0] + ";";
 
@@ -77,7 +79,9 @@ namespace FlexPoolAPI.Model
                                     sender_id = (int)rdr[1],
                                     sender_name = (string)rdr[2],
                                     date_sent = (DateTime)rdr[3],
-                                    msg_text = (string)rdr[4]
+                                    msg_text = (string)rdr[4],
+                                    sender_read = Int32.Parse(rdr[5].ToString()),
+                                    receiver_read = Int32.Parse(rdr[6].ToString())
                                 };
                                 responseData.Add($"Received Message {newMsg.msg_id}", new string[] { JsonConvert.SerializeObject(newMsg) });
                             }

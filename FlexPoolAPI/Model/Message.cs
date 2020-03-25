@@ -20,5 +20,7 @@ namespace FlexPoolAPI.Model
         public string receiver_name { get; set; }
         public DateTime date_sent { get; set; }
         public string msg_text { get; set; }
+        public int sender_read { get; set; }
+        public int receiver_read { get; set; }
     }
 }

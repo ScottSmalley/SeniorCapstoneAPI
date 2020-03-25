@@ -28,8 +28,8 @@ namespace FlexPoolAPI.Model
                 {
                     conn.Open();
                     //Creates a storage record for the person to be deleted.
-                    string sql = "INSERT INTO flexpooldb.person_storage (emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen) " + 
-                                 "SELECT emp_id, name, email, password, phone_num, weekly_hours, weekly_cap, emp_type, is_frozen FROM flexpooldb.person " +
+                    string sql = "REPLACE INTO flexpooldb.person_storage (emp_id, name, email, password, phone_num, weekly_cap, emp_type, is_frozen) " + 
+                                 "SELECT emp_id, name, email, password, phone_num, weekly_cap, emp_type, is_frozen FROM flexpooldb.person " +
                                  "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
 
                     if (inDevMode)
@@ -39,6 +39,18 @@ namespace FlexPoolAPI.Model
                     using (MySqlCommand cmdMigratePerson = new MySqlCommand(sql, conn))
                     {
                         cmdMigratePerson.ExecuteNonQuery();
+                    }
+
+                    //Deletes person from the person table.
+                    sql = "DELETE FROM flexpooldb.work_history WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
+                    using (MySqlCommand cmdDeleteWorkHistory = new MySqlCommand(sql, conn))
+                    {
+                        cmdDeleteWorkHistory.ExecuteNonQuery();
                     }
 
                     //Deletes person from the person table.

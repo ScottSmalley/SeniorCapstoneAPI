@@ -12,6 +12,8 @@ namespace FlexPoolAPI.Model
 {
     /// <summary>
     /// Deletes a skill record from the database.
+    /// Also deletes any assigned skill records 
+    /// from the database too.
     /// </summary>
     class CommandDeleteSkill : ActionCommand
     {
@@ -25,16 +27,31 @@ namespace FlexPoolAPI.Model
                 using (MySqlConnection conn = new MySqlConnection(newAction.GetSQLConn()))
                 {
                     conn.Open();
-                    //Will revisit later to check other tables to clean them of data of this skill. 
-                    string sql = "DELETE FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill"][0] + "\";";
+
+                    //Delete any assigned skill records from the database.
+                    string sql = "DELETE FROM flexpooldb.assigned_skill " +
+                        "WHERE skill_id = " +
+                        "(SELECT skill_id FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill"][0] + "\");";
 
                     if (inDevMode)
                     {
                         Console.WriteLine(sql);
                     }
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (MySqlCommand cmdDeleteAssignedSkill = new MySqlCommand(sql, conn))
                     {
-                        cmd.ExecuteNonQuery();
+                        cmdDeleteAssignedSkill.ExecuteNonQuery();
+                    }
+
+                    //Delete the skill from the skill database.
+                    sql = "DELETE FROM flexpooldb.skill WHERE skill_name = \"" + requestBody["skill"][0] + "\";";
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
+                    using (MySqlCommand cmdDeleteSkill = new MySqlCommand(sql, conn))
+                    {
+                        cmdDeleteSkill.ExecuteNonQuery();
                         responseData.Add("response", new string[] { "success" });
                         return responseData;
                     }

@@ -64,17 +64,23 @@ namespace FlexPoolAPI.Model
                         }
 
                         //Remove the hours associated with the shift assignment we're removing.
-                        sql = "UPDATE flexpooldb.person " +
-                              "SET weekly_hours = weekly_hours - " +
+                        sql = "UPDATE flexpooldb.work_history " +
+                              "SET hours_worked = hours_worked - " +
                               "((SELECT duration FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") / 60) " +
-                              "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                              "WHERE emp_id = " + requestBody["emp_id"][0] + " " +
+                              "AND week_id = " +
+                              "(SELECT week_id FROM flexpooldb.calendar_year " +
+                                  "WHERE start_date <= " +
+                                    "(SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") " +
+                                  "AND end_date >= " +
+                                    "(SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + "));";
                         using (MySqlCommand cmdAdjustWorkHours = new MySqlCommand(sql, conn))
                         {
                             cmdAdjustWorkHours.ExecuteNonQuery();
                         }
 
                         //Migrate the assigned_shift records over to the storage table.
-                        sql = "INSERT INTO flexpooldb.assigned_shift_storage (shift_id, emp_id, was_completed) " +
+                        sql = "REPLACE INTO flexpooldb.assigned_shift_storage (shift_id, emp_id, was_completed) " +
                               "SELECT shift_id, emp_id, 0 FROM flexpooldb.assigned_shift " +
                               "WHERE shift_id = " + requestBody["shift_id"][0] + ";";
                         using (MySqlCommand cmdMigrateShifts = new MySqlCommand(sql, conn))

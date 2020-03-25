@@ -28,7 +28,7 @@ namespace FlexPoolAPI.Model
                 {
                     conn.Open();
                     //Get all the sent messages for a specified person.
-                    string sql = "SELECT msg_id, receiver_id, date_sent, msg_text FROM flexpooldb.message " +
+                    string sql = "SELECT msg_id, receiver_id, date_sent, msg_text, sender_read, receiver_read FROM flexpooldb.message " +
                         "WHERE sender_id = " + requestBody["sender_id"][0] + ";";
 
                     if (inDevMode)
@@ -46,7 +46,9 @@ namespace FlexPoolAPI.Model
                                     msg_id = (int)rdr[0],
                                     receiver_id = (int)rdr[1],
                                     date_sent = (DateTime)rdr[2],
-                                    msg_text = (string)rdr[3]
+                                    msg_text = (string)rdr[3],
+                                    sender_read = Int32.Parse(rdr[4].ToString()),
+                                    receiver_read = Int32.Parse(rdr[5].ToString())
                                 };
                                 responseData.Add(newMsg.msg_id.ToString(), new string[] { JsonConvert.SerializeObject(newMsg) });
                             }

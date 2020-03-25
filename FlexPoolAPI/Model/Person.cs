@@ -17,9 +17,9 @@ namespace FlexPoolAPI.Model
         public string email { get; set; }
         public string password { get; set; }
         public string phone_num { get; set; }
-        public int weekly_hours { get; set; }
         public int weekly_cap { get; set; }
         public int emp_type { get; set; }
         public string emp_type_name { get; set; }
+        public int is_frozen { get; set; }
     }
 }

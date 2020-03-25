@@ -46,7 +46,8 @@ namespace FlexPoolAPI
         /// </summary>
         /// <param name="apiGatewayRequest"></param>
         /// <returns></returns>
-        public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest, ILambdaContext lambdaContextnotepad)
+        public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest)
+        //public APIGatewayProxyResponse Handler(APIGatewayProxyRequest apiGatewayRequest, ILambdaContext lambdaContextnotepad)
         {
             if (inDevMode)
             {
@@ -65,7 +66,7 @@ namespace FlexPoolAPI
             try
             {
                 //DB Connection
-                string mySQLConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONN");
+                //string mySQLConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONN");
 
                 //Deserialize the JSON object sent by the user.
                 Dictionary<string, string[]> requestBody = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(apiGatewayRequest.Body);

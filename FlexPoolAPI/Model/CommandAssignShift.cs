@@ -67,9 +67,18 @@ namespace FlexPoolAPI.Model
                             }
                         }
                         //Check to see if this employee has the room in their weekly_hours limit.
-                        sql = "SELECT ((weekly_cap - weekly_hours) - (SELECT (duration / 60) FROM flexpooldb.shift " +
-                                     "WHERE shift_id = " + requestBody["shift_id"][0] + ")) FROM flexpooldb.person " +
-                                     "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                        sql = "SELECT ((weekly_cap - " +
+                                "(SELECT hours_worked FROM flexpooldb.work_history " +
+                                "WHERE emp_id = " + requestBody["emp_id"][0] + " " +
+                                "AND week_id = " +
+                                    "(SELECT week_id FROM flexpooldb.calendar_year " +
+                                    "WHERE start_date <= (SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") " +
+                                  "AND end_date >= " +
+                                    "(SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ")))) " +
+                                    "- (SELECT (duration / 60) FROM flexpooldb.shift " +
+                                "WHERE shift_id = " + requestBody["shift_id"][0] + ")) FROM flexpooldb.person " +
+                                "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+
                         if (inDevMode)
                         {
                             Console.WriteLine(sql);
@@ -79,6 +88,10 @@ namespace FlexPoolAPI.Model
                             object resultHours = cmdHours.ExecuteScalar();
                             int empWeeklyHoursLeft = Convert.ToInt32(resultHours);
                             //If they have 0 or more hours left after assigning the shift, they have room for this shift.
+                            if (inDevMode)
+                            {
+                                Console.WriteLine($"EMPWEEKLYHOURSLEFT {empWeeklyHoursLeft}");
+                            }
                             if (empWeeklyHoursLeft >= 0)
                             {
                                 //Check to see if this employee has the skill to sign up for this shift.
@@ -142,10 +155,16 @@ namespace FlexPoolAPI.Model
                                                 }
 
                                                 //Increment the person's work hours now that they're assigned the shift.
-                                                sql = "UPDATE flexpooldb.person " +
-                                                      "SET weekly_hours = weekly_hours + " +
+                                                sql = "UPDATE flexpooldb.work_history " +
+                                                      "SET hours_worked = hours_worked + " +
                                                       "((SELECT duration FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") / 60) " +
-                                                      "WHERE emp_id = " + requestBody["emp_id"][0] + ";";
+                                                      "WHERE emp_id = " + requestBody["emp_id"][0] + " " +
+                                                      "AND week_id = " +
+                                                      "(SELECT week_id FROM flexpooldb.calendar_year " +
+                                                          "WHERE start_date <= " +
+                                                            "(SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + ") " +
+                                                          "AND end_date >= " +
+                                                            "(SELECT date FROM flexpooldb.shift WHERE shift_id = " + requestBody["shift_id"][0] + "));";
 
                                                 if (inDevMode)
                                                 {

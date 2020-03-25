@@ -28,7 +28,7 @@ namespace FlexPoolAPI.Model
                 {
                     conn.Open();
                     //Grab all the data related for a specific person.
-                    string sql = "SELECT emp_id, name, email, phone_num, weekly_hours, weekly_cap, flexpooldb.employee_type.emp_type_name FROM flexpooldb.person " +
+                    string sql = "SELECT emp_id, name, email, phone_num, weekly_cap, flexpooldb.employee_type.emp_type_name FROM flexpooldb.person " +
                         "INNER JOIN flexpooldb.employee_type " +
                         "ON flexpooldb.person.emp_type = employee_type.emp_type_id " +
                         "AND emp_id IN (";
@@ -56,9 +56,8 @@ namespace FlexPoolAPI.Model
                                     name = (string)rdr[1],
                                     email = (string)rdr[2],
                                     phone_num = (string)rdr[3],
-                                    weekly_hours = (int)rdr[4],
-                                    weekly_cap = (int)rdr[5],
-                                    emp_type_name = (string)rdr[6]
+                                    weekly_cap = (int)rdr[4],
+                                    emp_type_name = (string)rdr[5]
                                 };
                                 responseData.Add(person.emp_id.ToString(), new string[] { JsonConvert.SerializeObject(person) });
                             }

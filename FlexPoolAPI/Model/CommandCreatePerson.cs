@@ -68,6 +68,23 @@ namespace FlexPoolAPI.Model
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.ExecuteNonQuery();
+                    }
+
+                    sql = "INSERT INTO flexpooldb.work_history (week_id, emp_id) " +
+                        "VALUES (0, " + requestBody["emp_id"][0] + ")";
+                    for (int i = 1; i < 53; i++)
+                    {
+                        sql += ", (" + i + ", " + requestBody["emp_id"][0] + ")";
+                    }
+                    sql += (";");
+
+                    if (inDevMode)
+                    {
+                        Console.WriteLine(sql);
+                    }
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.ExecuteNonQuery();
                         responseData.Add("response", new string[] { "success" });
                         return responseData;
                     }

@@ -20,6 +20,8 @@ namespace FlexPoolAPI.Model
             //Person
                 case "get_person":
                     return new CommandGetPerson(newAction);
+                case "get_all_person":
+                    return new CommandGetAllPerson(newAction);
                 case "create_person":
                     return new CommandCreatePerson(newAction);
                 case "delete_person":
@@ -32,6 +34,8 @@ namespace FlexPoolAPI.Model
                     return new CommandFreezePerson(newAction);
                 case "unfreeze_person":
                     return new CommandUnfreezePerson(newAction);
+                case "get_weekly_hour":
+                    return new CommandGetWeeklyHour(newAction);
                 case "authenticate":
                     return new CommandAuthenticate(newAction);
             //Skill
@@ -60,6 +64,10 @@ namespace FlexPoolAPI.Model
                     return new CommandGetReceivedMessage(newAction);
                 case "get_all_message":
                     return new CommandGetAllMessage(newAction);
+                case "sender_message_read":
+                    return new CommandSenderMessageRead(newAction);
+                case "receiver_message_read":
+                    return new CommandReceiverMessageRead(newAction);
             //Shift
                 case "create_shift":
                     return new CommandCreateShift(newAction);
