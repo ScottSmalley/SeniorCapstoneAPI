@@ -11,7 +11,7 @@
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.8" />
     <PackageReference Include="MySql.Data" Version="8.0.18" />
   </ItemGroup>
 
