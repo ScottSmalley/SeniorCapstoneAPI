@@ -13,7 +13,7 @@
     <PackageReference Include="MailKit" Version="2.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0" />
-    <PackageReference Include="MimeKit" Version="2.5.0" />
+    <PackageReference Include="MimeKit" Version="4.15.1" />
     <PackageReference Include="MySql.Data" Version="8.0.18" />
   </ItemGroup>
 
